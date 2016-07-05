@@ -1,2 +1,3 @@
 # example-of-tensorflow
-collection of simple example written with tensorflow
+
+Collection of simple example written with tensorflow
