@@ -1,3 +1,3 @@
 # example-of-tensorflow
 
-Collection of simple example written with tensorflow
+A collection of simple examples written with tensorflow module
