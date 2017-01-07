@@ -8,12 +8,14 @@ batchSize = 100
 trainingSize = 900
 testSize = datSize - trainingSize
 learningRate = 1e-2
-numEpoch = 15000
-num_1_hidden_node = 1000
+numEpoch = 10000
+num_1_hidden_node = 100
+num_2_hidden_node = 100
+num_3_hidden_node = 100
 
 
 x = 2.*np.pi*np.random.random([datSize,1]) - np.pi; x = x.astype('float32')
-y = np.sin(x) + np.random.random()*1e-1; y = y.astype('float32')
+y = np.sin(x) + np.random.random()*1e-1 + np.exp(x)*np.cos(x) + x; y = y.astype('float32')
 
 with open('sample.out','w') as f:
     for n in xrange(datSize):
@@ -29,10 +31,22 @@ b1 = tf.Variable(tf.random_uniform([num_1_hidden_node]),dtype='float32')
 h1 = tf.matmul(tf_x,m1) + b1
 node1 = tf.nn.softmax(h1)
 
+# 2-hidden layer
+m2 = tf.Variable(tf.random_uniform([num_1_hidden_node,num_2_hidden_node]),dtype='float32')
+b2 = tf.Variable(tf.random_uniform([num_2_hidden_node]),dtype='float32')
+h2 = tf.matmul(node1,m2) + b2
+node2 = tf.nn.softmax(h2)
+
+# 3-hidden layer
+m3 = tf.Variable(tf.random_uniform([num_2_hidden_node,num_3_hidden_node]),dtype='float32')
+b3 = tf.Variable(tf.random_uniform([num_3_hidden_node]),dtype='float32')
+h3 = tf.matmul(node2,m3) + b3
+node3 = tf.nn.softmax(h3)
+
 # model
-m2 = tf.Variable(tf.random_uniform([num_1_hidden_node,1]),dtype='float32')
-b2 = tf.Variable(tf.random_uniform([1]),dtype='float32')
-model = tf.matmul(node1,m2) + b2
+mo = tf.Variable(tf.random_uniform([num_3_hidden_node,1]),dtype='float32')
+bo = tf.Variable(tf.random_uniform([1]),dtype='float32')
+model = tf.matmul(node3,mo) + bo
 
 costFunction = tf.reduce_mean(tf.reduce_sum(tf.square(model - tf_y)/2.,reduction_indices=[1]))
 
